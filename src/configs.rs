@@ -36,6 +36,7 @@ impl Display for ConfigError {
 pub struct Config {
     pub default_session: Option<String>,
     pub display_full_path: Option<bool>,
+    pub session_include_parent: Option<bool>,
     pub search_submodules: Option<bool>,
     pub recursive_submodules: Option<bool>,
     pub switch_filter_unknown: Option<bool>,

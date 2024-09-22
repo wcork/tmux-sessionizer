@@ -41,11 +41,23 @@ pub fn find_repos(config: &Config) -> Result<HashMap<String, Vec<Session>>> {
                 continue;
             }
 
-            let session_name = file
+            let file_name = file
                 .path
                 .file_name()
                 .expect("The file name doesn't end in `..`")
                 .to_string()?;
+
+            let session_name = {
+                match config.session_include_parent {
+                    Some(i) if i => match file.path.parent() {
+                        Some(parent) if parent.is_dir() => {
+                            format!("{}/{}", parent.file_name().unwrap().to_string()?, file_name)
+                        }
+                        _ => file_name,
+                    },
+                    _ => file_name,
+                }
+            };
 
             let session = Session::new(session_name, SessionType::Git(repo));
             if let Some(list) = repos.get_mut(&session.name) {
